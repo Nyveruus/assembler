@@ -3,6 +3,7 @@
  * if c command ,translate fields and append, write line
  */
 #include <stdio.h>
+#include "tables.h"
 
 int main(int argc, char *argv[]) {
    if (argc !=  3) {
@@ -16,9 +17,8 @@ int main(int argc, char *argv[]) {
    }
 
    //init tables
-   fields *codetable = NULL;
-   symbol *symboltable = NULL;
-   init_tables(codetable, symboltable);
+   symbol symboltable[MAX_SYMBOLS];
+   symbolt_init(symboltable);
 }
 
 
