@@ -2,6 +2,7 @@
 #define TABLES_H
 #define MAX_SYMBOLS 1024
 #define MAX_SYMLEN 64
+#define NUM_REGS 16
 
 typedef struct {
     const char *name;

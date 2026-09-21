@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
       return 1;
    }
 
-   //init tables
+   //init tables, fieldtable is already global
    symbol symboltable[MAX_SYMBOLS];
    symbolt_init(symboltable);
 }

@@ -4,8 +4,6 @@
 #include <string.h>
 #include "tables.h"
 
-#define NUM_REGS 16
-
 int symbolt_add(const char *name, int value, symbol *symboltable, bool isvar);
 
 /* Better to just use global variables to avoid overcomplexity and nesting */
@@ -69,7 +67,7 @@ int symbolt_init(symbol *symboltable) {
 int symbolt_add(const char *name, int value, symbol *symboltable, bool isvar) {
     /* Indexes must never collide, values for predefined symbols can collide and for user set symbols,
      * value is the index, incrementing. I will need to track whether the symbol is predefined or user set
-     * to know what value should be, count or symboltable value.
+     * to know what value should be, count or symboltable value, use a simple bool entered in caller.
      * We only care about int value for predefined symbols, otherwise = count
      */
 
