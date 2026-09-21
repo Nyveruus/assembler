@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
        fprintf(stderr, "Usage: hack_assembler [infile] [outfile]\n");
        return 1;
    }
-   FILE *infile = fopen(argv[1], 'r');
+   FILE *infile = fopen(argv[1], "r");
    if (!infile) {
       fprintf(stderr, "Error: invalid path\n");
       return 1;

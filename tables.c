@@ -1,7 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 #include "tables.h"
 
 #define NUM_REGS 16
+
+int symbolt_add(const char *name, int value, symbol *symboltable, bool isvar);
 
 /* Better to just use global variables to avoid overcomplexity and nesting */
 const static entry comp[] = {
@@ -29,7 +34,7 @@ const static entry jump[] = {
     {NULL, NULL}
 };
 
-const fields optable = {
+const fields fieldtable = {
     .comp_table = comp,
     .dest_table = dest,
     .jump_table = jump
@@ -51,11 +56,36 @@ int symbolt_init(symbol *symboltable) {
      */
 
     for (int i = 0; i < sizeof(predefined)/sizeof(predefined[0]); i++) {
-        symbolt_add(predefined[i].name, predefined[i].value);
+        symbolt_add(predefined[i].name, predefined[i].value, symboltable, false);
     }
-    for (int i = 0; i < NUM_REGS) {
+    for (int i = 0; i < NUM_REGS; i++) {
         char name [4];
-        snprintf(name, "R%i", i);
-        symbolt_add(name, i);
+        snprintf(name, sizeof(name), "R%i", i);
+        symbolt_add(name, i, symboltable, false);
     }
+    return 0;
+}
+
+int symbolt_add(const char *name, int value, symbol *symboltable, bool isvar) {
+    /* Indexes must never collide, values for predefined symbols can collide and for user set symbols,
+     * value is the index, incrementing. I will need to track whether the symbol is predefined or user set
+     * to know what value should be, count or symboltable value.
+     * We only care about int value for predefined symbols, otherwise = count
+     */
+
+    if (count > MAX_SYMBOLS) {
+        fprintf(stderr, "Max symbols exceeded\n");
+        exit(1);
+    }
+    if (strlen(name) >= MAX_SYMLEN - 1) {
+        fprintf(stderr, "Symbol size exceeded\n");
+        exit(1);
+    }
+
+    strcpy(symboltable[count].name, name);
+    isvar ? symboltable[count].value = count : (symboltable[count].value = value);
+    (void)value;
+
+    count++;
+    return 0;
 }

@@ -1,6 +1,7 @@
 #ifndef TABLES_H
 #define TABLES_H
 #define MAX_SYMBOLS 1024
+#define MAX_SYMLEN 64
 
 typedef struct {
     const char *name;
@@ -14,10 +15,12 @@ typedef struct {
 } fields;
 
 typedef struct {
-    char name[64]
+    char name[MAX_SYMLEN];
     unsigned int value;
 } symbol;
 
-extern const fields table;
+extern const fields fieldtable;
+
+int symbolt_init(symbol *symboltable);
 
 #endif
