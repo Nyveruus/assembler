@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "tables.h"
 
+#define NUM_REGS 16
+
 /* Better to just use global variables to avoid overcomplexity and nesting */
 const static entry comp[] = {
     {"0", "0101010"}, {"1", "0111111"}, {"-1", "0111010"},
@@ -38,6 +40,22 @@ static const symbol predefined[] = {
     {"SCREEN", 16384}, {"KBD", 24576}
 };
 
-int symbolt_init(symbol *symboltable) {
+static size_t count = 0;
 
+int symbolt_init(symbol *symboltable) {
+    //predefined symbols and registers until 16
+
+    /* Separate counter to track what indexes are used in table will have to be used to avoid overwritting
+     * previously set symbols. Maybe the best approach is to use a universal adder function (for variables too)
+     * with a static counter that can be used each time a new symbol is entered
+     */
+
+    for (int i = 0; i < sizeof(predefined)/sizeof(predefined[0]); i++) {
+        symbolt_add(predefined[i].name, predefined[i].value);
+    }
+    for (int i = 0; i < NUM_REGS) {
+        char name [4];
+        snprintf(name, "R%i", i);
+        symbolt_add(name, i);
+    }
 }
