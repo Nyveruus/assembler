@@ -31,10 +31,13 @@ int main(int argc, char *argv[]) {
 
    //read line
     char linebuffer[LINE_LEN];
+    char *line;
     size_t instruction_count = 0;
 
     while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
-        if (!parser(linebuffer))
+
+        //parser returns bool on whether to skip or not
+        if (!parser(linebuffer, &line))
             continue;
     }
 }

@@ -2,15 +2,15 @@
 #include <string.h>
 #include <ctype.h>
 
-static bool preprocess(char *linebuffer);
+static bool preprocess(char *linebuffer, char **line);
 
-bool parser(char *linebuffer) {
+bool parser(char *linebuffer, char **line) {
     //remove comments, whitespace
-    if (!preprocess)
+    if (!preprocess(linebuffer, line))
         return false;
 }
 
-static bool preprocess(char *linebuffer) {
+static bool preprocess(char *linebuffer, char **line) {
 
     /* Use a pointer for moving around the buffer, first check for any comments (//), set it to null terminator
      * and then trim trailing white space by iterating over each char
@@ -21,25 +21,25 @@ static bool preprocess(char *linebuffer) {
      * loop + indexing until white space since instruction set doesn't use white space
      */
 
-    char *line = linebuffer;
+    *line = linebuffer;
 
     //cut out comment
 
-    char *comment = strstr(line, "//");
+    char *comment = strstr(*line, "//");
     if (comment != NULL) {
         *comment = '\0';
     }
 
     //fgets always null temrinates so don't worry about the pointer reaching \n, iterating again and causing UB
 
-    while (isspace((char)*line)) {
-        line++;
+    while (isspace((char)**line)) {
+        *line++;
     }
-    if (*line == '\0')
+    if (**line == '\0')
         return false;
 
-    char *end = line;
-    while (isspace((char)*end) && *end != '\0')
+    char *end = *line;
+    while (!isspace((char)*end) && *end != '\0')
         end++;
     *end = '\0';
     return true;
