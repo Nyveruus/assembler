@@ -42,12 +42,13 @@ int main(int argc, char *argv[]) {
    }
 
    rewind(infile);
-   instruction_count = 0;
+   size_t line_n = 0;
 
     //second pass
     while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
+        line_n++;
         //strip white space and comments
-        if (!parser(linebuffer, &line, &instruction_count))
+        if (!parser(linebuffer, &line))
            continue;
         //assemble
    }

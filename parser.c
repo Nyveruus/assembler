@@ -5,11 +5,10 @@
 
 static bool preprocess(char *linebuffer, char **line);
 
-bool parser(char *linebuffer, char **line, size_t *instruction_count) {
+bool parser(char *linebuffer, char **line) {
     //remove comments, whitespace. If not just white space or comment, increment instruction count
     if (!preprocess(linebuffer, line))
         return false;
-    (*instruction_count)++;
     return true;
 }
 
