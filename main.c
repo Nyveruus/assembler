@@ -20,6 +20,12 @@ int main(int argc, char *argv[]) {
       return 1;
    }
 
+   FILE *outfile = fopen(argv[2], "w");
+   if (!outfile) {
+       perror("Error: ");
+       return 1;
+   }
+
    //init tables, fieldtable is already global
 
    symbol symboltable[MAX_SYMBOLS];
@@ -31,7 +37,7 @@ int main(int argc, char *argv[]) {
 
    char linebuffer[LINE_LEN];
    char *line;
-   size_t instruction_count = 0;
+   size_t instruction_count = 0, line_n = 0;
 
    /* first pass, look for labels, if find (x) in line, update symboltable with x for name and isntruction_count for value, else
     * line has chars, then instruction count++
@@ -42,15 +48,20 @@ int main(int argc, char *argv[]) {
    }
 
    rewind(infile);
-   size_t line_n = 0;
 
     //second pass
     while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
         line_n++;
         //strip white space and comments
         if (!parser(linebuffer, &line))
-           continue;
-        //assemble
+            continue;
+
+        /* assemble, continuously append to a new symbolic bits buffer, lookup and write in order of bit fields
+         * and use = ; or their absence as delimiters for each field, when bit buffer is complete, write to file.
+         * If syntax error, output line number with line_n, don't write to file, close file, rename to .partial
+         */
+
+
    }
 }
 
