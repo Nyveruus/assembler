@@ -3,6 +3,9 @@
 #include <stdbool.h>
 #include <string.h>
 #include "tables.h"
+#define MAX_SYMLEN 64
+#define NUM_REGS 16
+
 
 int symbolt_add(const char *name, int value, symbol *symboltable, bool isvar);
 
