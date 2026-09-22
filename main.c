@@ -29,17 +29,25 @@ int main(int argc, char *argv[]) {
     * ignore it from read, and if nothing then continue (empty line)?
     */
 
-   //read line
-    char linebuffer[LINE_LEN];
-    char *line;
-    size_t instruction_count = 0;
+   char linebuffer[LINE_LEN];
+   char *line;
+   size_t instruction_count = 0;
 
-    while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
+   /* first pass, look for labels, if find (x) in line, update symboltable with x for name and isntruction_count + 1 for value, else
+    * line has chars, then instruction count++
+    */
 
-        //parser returns bool on whether to skip or not
-        if (!parser(linebuffer, &line))
-            continue;
-    }
+   while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
+       first_pass_func(linebuffer, symboltable, &instruction_count);
+   }
+
+   rewind(infile);
+   instruction_count = 0;
+
+   while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
+       if (!parser(linebuffer, &line, &instruction_count))
+           continue;
+   }
 }
 
 

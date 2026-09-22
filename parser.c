@@ -4,10 +4,11 @@
 
 static bool preprocess(char *linebuffer, char **line);
 
-bool parser(char *linebuffer, char **line) {
-    //remove comments, whitespace
+bool parser(char *linebuffer, char **line, size_t *instruction_count) {
+    //remove comments, whitespace. If not just white space or comment, increment instruction count
     if (!preprocess(linebuffer, line))
         return false;
+    (*instruction_count)++;
 }
 
 static bool preprocess(char *linebuffer, char **line) {
@@ -30,10 +31,9 @@ static bool preprocess(char *linebuffer, char **line) {
         *comment = '\0';
     }
 
-    //fgets always null temrinates so don't worry about the pointer reaching \n, iterating again and causing UB
-
+    //fgets always null temrinates so don't worry about the pointer reaching \n, iterating again and causing UB here
     while (isspace((char)**line)) {
-        *line++;
+        (*line)++;
     }
     if (**line == '\0')
         return false;
