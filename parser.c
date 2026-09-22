@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
+#include "tables.h"
 
 static bool preprocess(char *linebuffer, char **line);
 
@@ -9,6 +10,11 @@ bool parser(char *linebuffer, char **line, size_t *instruction_count) {
     if (!preprocess(linebuffer, line))
         return false;
     (*instruction_count)++;
+    return true;
+}
+
+void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_count) {
+
 }
 
 static bool preprocess(char *linebuffer, char **line) {

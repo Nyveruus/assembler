@@ -2,6 +2,6 @@
 #define PARSER_H
 
 #include <stdbool.h>
-bool parser(char *linebuffer, char **line, int *instruction_count);
+bool parser(char *linebuffer, char **line, size_t *instruction_count);
 
 #endif

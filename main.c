@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
    char *line;
    size_t instruction_count = 0;
 
-   /* first pass, look for labels, if find (x) in line, update symboltable with x for name and isntruction_count + 1 for value, else
+   /* first pass, look for labels, if find (x) in line, update symboltable with x for name and isntruction_count for value, else
     * line has chars, then instruction count++
     */
 
@@ -44,9 +44,12 @@ int main(int argc, char *argv[]) {
    rewind(infile);
    instruction_count = 0;
 
-   while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
-       if (!parser(linebuffer, &line, &instruction_count))
+    //second pass
+    while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
+        //strip white space and comments
+        if (!parser(linebuffer, &line, &instruction_count))
            continue;
+        //assemble
    }
 }
 
