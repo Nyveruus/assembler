@@ -2,6 +2,7 @@
 #define TABLES_H
 #define MAX_SYMBOLS 1024
 #define MAX_SYMLEN 64
+#include <stdbool.h>
 
 typedef struct {
     const char *name;
@@ -22,5 +23,6 @@ typedef struct {
 extern const fields fieldtable;
 
 int symbolt_init(symbol *symboltable);
+int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar);
 
 #endif

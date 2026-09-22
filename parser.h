@@ -3,5 +3,6 @@
 
 #include <stdbool.h>
 bool parser(char *linebuffer, char **line, size_t *instruction_count);
+void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_count);
 
 #endif

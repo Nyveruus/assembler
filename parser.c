@@ -14,7 +14,22 @@ bool parser(char *linebuffer, char **line, size_t *instruction_count) {
 }
 
 void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_count) {
+    char *line;
+    if (!preprocess(linebuffer, &line))
+        return;
+    //going forward we know line has chars either label or instruction
 
+    if (*line != '(') {
+        (*instruction_count)++;
+        return;
+    }
+
+    char *start = strstr("(", line);
+    char *end = strstr(")", line);
+    start++;
+    *end = '\0';
+
+    symbolt_add(start, *instruction_count, symboltable, false);
 }
 
 static bool preprocess(char *linebuffer, char **line) {

@@ -7,7 +7,7 @@
 #define NUM_REGS 16
 
 
-int symbolt_add(const char *name, int value, symbol *symboltable, bool isvar);
+int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar);
 
 /* Better to just use global variables to avoid overcomplexity and nesting */
 const static entry comp[] = {
@@ -41,7 +41,7 @@ const fields fieldtable = {
     .jump_table = jump
 };
 
-static const symbol predefined[] = {
+static symbol predefined[] = {
     {"SP", 0}, {"LCL", 1}, {"ARG", 2}, {"THIS", 3}, {"THAT", 4},
     {"SCREEN", 16384}, {"KBD", 24576}
 };
@@ -67,7 +67,7 @@ int symbolt_init(symbol *symboltable) {
     return 0;
 }
 
-int symbolt_add(const char *name, int value, symbol *symboltable, bool isvar) {
+int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar) {
 
     /* Indexes must never collide, values for predefined symbols can collide and for user set symbols,
      * value is the index, incrementing. I will need to track whether the symbol is predefined or user set
