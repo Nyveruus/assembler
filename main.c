@@ -1,13 +1,10 @@
-/* Each insruction corresponds to 16 symbolic bits (char representation), * open each file, initialize opcode table, initialize symbol table, add predefined symbols to symbol table, * read line by line one buffer for all, for each line (first pass) check for labels and add to symbol table according to instruction number of next,
- * restart reading, for each line, a or c command?, parse into fields, if a command, notes symbol into symbol table, translate, if symbol found, translate directly,
- * if c command ,translate fields and append, write line
- */
-
 #include <stdio.h>
 #include <string.h>
 #include "tables.h"
 #include "parser.h"
 #define LINE_LEN 256
+
+char *append_partial(char *name);
 
 int main(int argc, char *argv[]) {
    if (argc !=  3) {
@@ -36,11 +33,13 @@ int main(int argc, char *argv[]) {
     */
 
    char linebuffer[LINE_LEN];
-   char *line;
-   size_t instruction_count = 0, line_n = 0;
+   char *line, partial_name;
+   size_t instruction_count = 0;
+   ssize_t line_n;
 
-   /* first pass, look for labels, if find (x) in line, update symboltable with x for name and isntruction_count for value, else
-    * line has chars, then instruction count++
+   /* first pass, look for labels by clearing comments and white space and then checking if current char is (, a label,
+    * update symboltable with everything between () for name and instruction_count for value, if there is a different char than (,
+    * we can just increment counter and return
     */
 
    while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
@@ -56,13 +55,36 @@ int main(int argc, char *argv[]) {
         if (!parser(linebuffer, &line))
             continue;
 
-        /* assemble, continuously append to a new symbolic bits buffer, lookup and write in order of bit fields
-         * and use = ; or their absence as delimiters for each field, when bit buffer is complete, write to file.
-         * If syntax error, output line number with line_n, don't write to file, close file, rename to .partial
+        /* assemble, we should append to a new symbolic bits buffer as we lookup and translate parts of the instruction. We can
+         * use = ; or their absence as delimiters for each field and when bit buffer is complete, write to file.
+         * If there is a syntax error, just output line number with line_n and don't write, close file, rename to .partial or just delete the outfile
          */
 
+        char buffer[16];
+        if (!assemble(buffer, line, symboltable))  {
+            fprintf(stderr, "Syntax error: line %zd\n", line_n);
+            if (!(partial_name = append_partial(argv[2]))) {
+                fclose(outfile);
+                remove(argv[2]);
+                goto error_cleanup;
+            }
 
-   }
+            fclose(outfile);
+            rename(argv[2], partial_name);
+            free(partial_name);
+error_cleanup:
+            fclose(infile);
+            return 1;
+        }
+        fwrite(buffer, sizeof(buffer[0]), sizeof(buffer)/sizeof(buffer[0]), outfile);
+    }
+    fclose(outfile);
+    fclose(infile);
+    return 0;
+}
+
+char *append_partial(char *name) {
+
 }
 
 
