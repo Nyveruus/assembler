@@ -33,7 +33,7 @@ static bool a_instruction(char *buffer, char *instruction, symbol *symboltable) 
     unsigned int value;
     bool is_symbol = true;
 
-    if (isdigit((unsigned char)fuekd[0])) {
+    if (isdigit((unsigned char)field[0])) {
         is_symbol = false;
         value = atoi(field);
         if (value == 0)
@@ -51,8 +51,26 @@ static bool a_instruction(char *buffer, char *instruction, symbol *symboltable) 
         }
     }
 
-    //translate value
+    /*
+     * Convert decimal to binary representation in buffer. Instead of using convoluted logic maybe can try to take advantage of the fact that
+     * the underlying bit positions of the int and the output for this part of the buffer are symbolically equivalent. Buffer[0] and buffer[16]
+     * must not be touched, so this needs to be factored in as an offset and cut off point. Iterating forwards (1 to 15) is not possible (or ideal)
+     * because it would cause the buffer bit order to be reversed (little endian) and would pad bits to the right instead of left, bad address.
+     * Must iterate backwards (15 to 1). For each iteration find amount to bit shift
+     */
 
+    for (int i = 15; i >= 1; i--) {
+
+        int bit_shift = 15 - i;
+        char bit;
+
+        if ((1 << bit_shift) & value)
+            bit = '1';
+        else
+            bit = '0';
+
+        buffer[i] = bit;
+    }
 }
 
 static bool c_instruction(char *buffer, char *instruction, symbol *symboltable) {

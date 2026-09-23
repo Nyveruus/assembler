@@ -15,7 +15,8 @@ void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_
     char *line;
     if (!preprocess(linebuffer, &line))
         return;
-    //going forward we know line has chars either label or instruction
+
+    // going forward we know line has chars either label or instruction
 
     if (*line != '(') {
         (*instruction_count)++;
@@ -44,14 +45,13 @@ static bool preprocess(char *linebuffer, char **line) {
 
     *line = linebuffer;
 
-    //cut out comment
-
+    // cut out comment
     char *comment = strstr(*line, "//");
     if (comment != NULL) {
         *comment = '\0';
     }
 
-    //fgets always null temrinates so don't worry about the pointer reaching \n, iterating again and causing UB here
+    // fgets always null temrinates so don't worry about the pointer reaching \n, iterating again and causing UB here
     while (isspace((char)**line)) {
         (*line)++;
     }

@@ -54,7 +54,9 @@ int main(int argc, char *argv[]) {
 
     //second pass
     while (fgets(linebuffer, sizeof(linebuffer), infile) != NULL) {
+
         line_n++;
+
         //strip white space and comments
         if (!parser(linebuffer, &line))
             continue;
