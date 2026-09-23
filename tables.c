@@ -51,7 +51,8 @@ static size_t count = 0;
 int symbolt_init(symbol *symboltable) {
     //predefined symbols and registers until 16
 
-    /* Separate counter to track what indexes are used in table will have to be used to avoid overwritting
+    /*
+     * Separate counter to track what indexes are used in table will have to be used to avoid overwritting
      * previously set symbols. Maybe the best approach is to use a universal adder function (for variables too)
      * with a static counter that can be used each time a new symbol is entered
      */
@@ -69,7 +70,8 @@ int symbolt_init(symbol *symboltable) {
 
 int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar) {
 
-    /* Indexes must never collide, values for predefined symbols can collide and for user set symbols,
+    /*
+     * Indexes must never collide, values for predefined symbols can collide and for user set symbols,
      * value is the index, incrementing. I will need to track whether the symbol is predefined or user set
      * to know what value should be, count or symboltable value, use a simple bool entered in caller.
      * We only care about int value for predefined symbols, otherwise = count
@@ -90,4 +92,15 @@ int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar) {
 
     count++;
     return 0;
+}
+
+bool symbolt_lookup(char *name, symbol *symboltable, unsigned int *return_value) {
+
+    for (int i = 0; i < count; i++) {
+        if (!strcmp(symboltable[i].name, name)) {
+            *return_value = symboltable[i].value;
+            return true;
+        }
+    }
+    return false;
 }

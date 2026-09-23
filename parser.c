@@ -32,7 +32,8 @@ void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_
 
 static bool preprocess(char *linebuffer, char **line) {
 
-    /* Use a pointer for moving around the buffer, first check for any comments (//), set it to null terminator
+    /*
+     * Use a pointer for moving around the buffer, first check for any comments (//), set it to null terminator
      * and then trim trailing white space by iterating over each char
      * beginning to end until space is found and terminating.
      * Wait, if there are leading spaces then it might prematurely end

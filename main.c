@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
    symbol symboltable[MAX_SYMBOLS];
    symbolt_init(symboltable);
 
-   /* Do a loop for reading each line and parsing, before the parser step check for whitespace or comments,
+   /*
+    * Do a loop for reading each line and parsing, before the parser step check for whitespace or comments,
     * ignore it from read, and if nothing then continue (empty line)?
     */
 
@@ -39,7 +40,8 @@ int main(int argc, char *argv[]) {
    size_t instruction_count = 0;
    ssize_t line_n;
 
-   /* first pass, look for labels by clearing comments and white space and then checking if current char is (, a label,
+   /*
+    * first pass, look for labels by clearing comments and white space and then checking if current char is (, a label,
     * update symboltable with everything between () for name and instruction_count for value, if there is a different char than (,
     * we can just increment counter and return
     */
@@ -57,7 +59,8 @@ int main(int argc, char *argv[]) {
         if (!parser(linebuffer, &line))
             continue;
 
-        /* assemble, we should append to a new symbolic bits buffer as we lookup and translate parts of the instruction. We can
+        /*
+         * assemble, we should append to a new symbolic bits buffer as we lookup and translate parts of the instruction. We can
          * use = ; or their absence as delimiters for each field and when bit buffer is complete, write to file.
          * If there is a syntax error, just output line number with line_n and don't write, close file, rename to .partial or just delete the outfile
          */
