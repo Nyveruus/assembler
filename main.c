@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "tables.h"
 #include "parser.h"
+#include "assembler.h"
 #define LINE_LEN 256
 
 char *append_partial(char *name);
@@ -60,7 +62,8 @@ int main(int argc, char *argv[]) {
          * If there is a syntax error, just output line number with line_n and don't write, close file, rename to .partial or just delete the outfile
          */
 
-        char buffer[16];
+        char buffer[17];
+        buffer[16] = '\0';
         if (!assemble(buffer, line, symboltable))  {
             fprintf(stderr, "Syntax error: line %zd\n", line_n);
             if (!(partial_name = append_partial(argv[2]))) {
@@ -76,7 +79,7 @@ error_cleanup:
             fclose(infile);
             return 1;
         }
-        fwrite(buffer, sizeof(buffer[0]), sizeof(buffer)/sizeof(buffer[0]), outfile);
+        fprintf(outfile, "%s\n", buffer);
     }
     fclose(outfile);
     fclose(infile);
