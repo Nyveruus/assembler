@@ -10,7 +10,7 @@ char *append_partial(char *name);
 
 int main(int argc, char *argv[]) {
    if (argc !=  3) {
-       fprintf(stderr, "Usage: hack_assembler [infile] [outfile]\n");
+       fprintf(stderr, "Usage: ./hack_assembler [infile] [outfile]\n");
        return 1;
    }
    FILE *infile = fopen(argv[1], "r");
