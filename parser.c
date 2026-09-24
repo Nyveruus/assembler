@@ -47,9 +47,8 @@ static bool preprocess(char *linebuffer, char **line) {
 
     // cut out comment
     char *comment = strstr(*line, "//");
-    if (comment != NULL) {
+    if (comment != NULL)
         *comment = '\0';
-    }
 
     // fgets always null temrinates so don't worry about the pointer reaching \n, iterating again and causing UB here
     while (isspace((unsigned char)**line)) {
@@ -57,7 +56,7 @@ static bool preprocess(char *linebuffer, char **line) {
     }
     if (**line == '\0')
         return false;
-    else if (**line == '\n')
+    else if (**line == '(')
         return false;
 
     char *end = *line;
