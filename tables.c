@@ -10,7 +10,7 @@
 int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar);
 
 /* Better to just use global variables to avoid overcomplexity and nesting */
-const static entry comp[] = {
+static const entry comp[] = {
     {"0", "0101010"}, {"1", "0111111"}, {"-1", "0111010"},
     {"D", "0001100"}, {"A", "0110000"}, {"!D", "0001101"},
     {"!A", "0110001"}, {"-D", "0001111"}, {"-A", "0110011"},
@@ -23,13 +23,13 @@ const static entry comp[] = {
     {"D|M", "1010101"}, {NULL, NULL}
 };
 
-const static entry dest[] = {
+static const entry dest[] = {
     {"", "000"}, {"M", "001"}, {"D", "010"}, {"MD", "011"},
     {"A", "100"}, {"AM", "101"}, {"AD", "110"}, {"AMD", "111"},
     {NULL, NULL}
 };
 
-const static entry jump[] = {
+static const entry jump[] = {
     {"", "000"}, {"JGT", "001"}, {"JEQ", "010"}, {"JGE", "011"},
     {"JLT", "100"}, {"JNE", "101"}, {"JLE", "110"}, {"JMP", "111"},
     {NULL, NULL}
@@ -57,12 +57,12 @@ int symbolt_init(symbol *symboltable) {
      * with a static counter that can be used each time a new symbol is entered
      */
 
-    for (int i = 0; i < sizeof(predefined)/sizeof(predefined[0]); i++) {
+    for (size_t i = 0; i < sizeof(predefined)/sizeof(predefined[0]); i++) {
         symbolt_add(predefined[i].name, predefined[i].value, symboltable, false);
     }
-    for (int i = 0; i < NUM_REGS; i++) {
+    for (size_t i = 0; i < NUM_REGS; i++) {
         char name [4];
-        snprintf(name, sizeof(name), "R%i", i);
+        snprintf(name, sizeof(name), "R%li", i);
         symbolt_add(name, i, symboltable, false);
     }
     return 0;
@@ -96,7 +96,7 @@ int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar) {
 
 bool symbolt_lookup(char *name, symbol *symboltable, unsigned int *return_value) {
 
-    for (int i = 0; i < count; i++) {
+    for (size_t i = 0; i < count; i++) {
         if (!strcmp(symboltable[i].name, name)) {
             *return_value = symboltable[i].value;
             return true;

@@ -50,8 +50,6 @@ static bool a_instruction(char *buffer, char *instruction, symbol *symboltable) 
     if (isdigit((unsigned char)field[0])) {
         is_symbol = false;
         value = atoi(field);
-        if (value == 0)
-            return false;
     }
 
     if (is_symbol) {

@@ -23,8 +23,8 @@ void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_
         return;
     }
 
-    char *start = strstr("(", line);
-    char *end = strstr(")", line);
+    char *start = strstr(line, "(");
+    char *end = strstr(line, ")");
     start++;
     *end = '\0';
 
@@ -52,14 +52,19 @@ static bool preprocess(char *linebuffer, char **line) {
     }
 
     // fgets always null temrinates so don't worry about the pointer reaching \n, iterating again and causing UB here
-    while (isspace((char)**line)) {
+    while (isspace((unsigned char)**line)) {
         (*line)++;
     }
     if (**line == '\0')
         return false;
+    else if (**line == '\n')
+        return false;
 
     char *end = *line;
-    while (!isspace((char)*end) && *end != '\0')
+
+    // Bug found here, isblank does not include \n and so it remains in line causing upstream problems when assembling, found by inspectings vars at assembler.c in gdb
+    // Use isspace instead of isblank
+    while (!isspace((unsigned char)*end) && *end != '\0')
         end++;
     *end = '\0';
     return true;
