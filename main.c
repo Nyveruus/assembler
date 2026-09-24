@@ -89,7 +89,15 @@ error_cleanup:
 }
 
 char *append_partial(char *name) {
-
+    char *partial = ".partial";
+    char *rename = malloc(strlen(argv[2]) + strlen(partial) + 1);
+    if (!rename) {
+        perror("Error: ");
+        return NULL;
+    }
+    strcpy(rename, argv[2]);
+    strcat(rename, partial);
+    return rename;
 }
 
 
