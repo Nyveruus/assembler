@@ -3,17 +3,17 @@
 #include <ctype.h>
 #include "tables.h"
 
-static bool preprocess(char *linebuffer, char **line);
+static bool preprocess(char *linebuffer, char **line, bool first_pass);
 
 bool parser(char *linebuffer, char **line) {
-    if (!preprocess(linebuffer, line))
+    if (!preprocess(linebuffer, line, false))
         return false;
     return true;
 }
 
 void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_count) {
     char *line;
-    if (!preprocess(linebuffer, &line))
+    if (!preprocess(linebuffer, &line, true))
         return;
 
     // going forward we know line has chars either label or instruction
@@ -31,7 +31,7 @@ void first_pass_func(char *linebuffer, symbol *symboltable, size_t *instruction_
     symbolt_add(start, *instruction_count, symboltable, false);
 }
 
-static bool preprocess(char *linebuffer, char **line) {
+static bool preprocess(char *linebuffer, char **line, bool first_pass) {
 
     /*
      * Use a pointer for moving around the buffer, first check for any comments (//), set it to null terminator
@@ -56,8 +56,10 @@ static bool preprocess(char *linebuffer, char **line) {
     }
     if (**line == '\0')
         return false;
-    else if (**line == '(')
-        return false;
+
+    if (!first_pass)
+        if (**line == '(')
+            return false;
 
     char *end = *line;
 

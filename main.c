@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
    char *line, *partial_name;
    size_t instruction_count = 0;
    ssize_t line_n;
+   bool first = true;
 
    /*
     * first pass, look for labels by clearing comments and white space and then checking if current char is (, a label,
@@ -80,7 +81,11 @@ error_cleanup:
             fclose(infile);
             return 1;
         }
-        fprintf(outfile, "%s\n", buffer);
+
+        if (!first)
+            fputc('\n', outfile);
+        fputs(buffer, outfile);
+        first = false;
     }
     fclose(outfile);
     fclose(infile);

@@ -1,5 +1,4 @@
 main
-*.hack
-*.asm
 *.partial
 hack_assembler
+*.txt

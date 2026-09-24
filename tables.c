@@ -47,9 +47,10 @@ static symbol predefined[] = {
 };
 
 static size_t count = 0;
+// hack vars must start at value 16
+static size_t next_var = 16;
 
 int symbolt_init(symbol *symboltable) {
-    //predefined symbols and registers until 16
 
     /*
      * Separate counter to track what indexes are used in table will have to be used to avoid overwritting
@@ -87,9 +88,11 @@ int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar) {
     }
 
     strcpy(symboltable[count].name, name);
-    isvar ? symboltable[count].value = count : (symboltable[count].value = value);
-    (void)value;
 
+    //isvar ? symboltable[count].value = count : (symboltable[count].value = value);
+    symboltable[count].value = isvar ? next_var++ : value;
+
+    (void)value;
     count++;
     return 0;
 }
