@@ -1,13 +1,24 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 #include "tables.h"
+
 #define A_BITS 15
+
 #define COMP_DELIM "="
 #define JUMP_DELIM ";"
 
+#define COMP_OFFSET 3
+#define DEST_OFFSET 10
+#define JUMP_OFFSET 13
+
+#define NUMB_COMP 7
+#define NUMB_DESTJUMP 3
+
 static bool a_instruction(char *buffer, char *instruction, symbol *symboltable);
 static bool c_instruction(char *buffer, char *instruction);
+static const char *lookup_field(char *key, const entry *table);
 
 bool assemble(char *buffer, char *instruction, symbol *symboltable) {
     bool is_a, return_val;
@@ -114,10 +125,18 @@ static bool c_instruction(char *buffer, char *instruction) {
     if (!comp_return || !dest_return || !jump_return)
         return false;
 
+    // use memcpy instead of strcpy because we cannot include null terminator for each field
+    memcpy(buffer + COMP_OFFSET, comp_return, NUM_COMP);
+    memcpy(buffer + DEST_OFFSET, dest_return, NUM_DESTJUMP);
+    memcpy(buffer + JUMP_OFFSET, jump_return, NUM_DESTJUMP);
+
+    return true;
 }
 
-static const char *lookup_field(char *key, entry *table) {
-    for () {
-
+static const char *lookup_field(char *key, const entry *table) {
+    for (const entry *ee = table; ee->name != NULL; ee++) {
+        if (!strcmp(ee->name, key))
+            return ee->number;
     }
+    return NULL;
 }
