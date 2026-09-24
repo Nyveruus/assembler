@@ -24,6 +24,6 @@ extern const fields fieldtable;
 
 int symbolt_init(symbol *symboltable);
 int symbolt_add(char *name, size_t value, symbol *symboltable, bool isvar);
-bool symbolt_lookup(char *name, symbol *symboltable, unsigned int return_value);
+bool symbolt_lookup(char *name, symbol *symboltable, unsigned int *return_value);
 
 #endif

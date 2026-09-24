@@ -22,7 +22,7 @@ static const char *lookup_field(char *key, const entry *table);
 
 bool assemble(char *buffer, char *instruction, symbol *symboltable) {
     bool is_a, return_val;
-    instruction[0] == '@' ? is_a = true : is_a = false;
+    instruction[0] == '@' ? is_a = true : (is_a = false);
 
     if (is_a)
         return_val = a_instruction(buffer, instruction, symboltable);
@@ -118,17 +118,17 @@ static bool c_instruction(char *buffer, char *instruction) {
         *tmp1 = '\0';
     }
 
-    const char *comp_return = lookup_field(comp, fieldtable.comp);
-    const char *dest_return = lookup_field(dest, fieldtable.dest);
-    const char *jump_return = lookup_field(jump, fieldtable.jump);
+    const char *comp_return = lookup_field(comp, fieldtable.comp_table);
+    const char *dest_return = lookup_field(dest, fieldtable.dest_table);
+    const char *jump_return = lookup_field(jump, fieldtable.jump_table);
 
     if (!comp_return || !dest_return || !jump_return)
         return false;
 
     // use memcpy instead of strcpy because we cannot include null terminator for each field
-    memcpy(buffer + COMP_OFFSET, comp_return, NUM_COMP);
-    memcpy(buffer + DEST_OFFSET, dest_return, NUM_DESTJUMP);
-    memcpy(buffer + JUMP_OFFSET, jump_return, NUM_DESTJUMP);
+    memcpy(buffer + COMP_OFFSET, comp_return, NUMB_COMP);
+    memcpy(buffer + DEST_OFFSET, dest_return, NUMB_DESTJUMP);
+    memcpy(buffer + JUMP_OFFSET, jump_return, NUMB_DESTJUMP);
 
     return true;
 }

@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     */
 
    char linebuffer[LINE_LEN];
-   char *line, partial_name;
+   char *line, *partial_name;
    size_t instruction_count = 0;
    ssize_t line_n;
 
@@ -80,7 +80,6 @@ error_cleanup:
             fclose(infile);
             return 1;
         }
-
         fprintf(outfile, "%s\n", buffer);
     }
     fclose(outfile);
@@ -90,14 +89,12 @@ error_cleanup:
 
 char *append_partial(char *name) {
     char *partial = ".partial";
-    char *rename = malloc(strlen(argv[2]) + strlen(partial) + 1);
+    char *rename = malloc(strlen(name) + strlen(partial) + 1);
     if (!rename) {
         perror("Error: ");
         return NULL;
     }
-    strcpy(rename, argv[2]);
+    strcpy(rename, name);
     strcat(rename, partial);
     return rename;
 }
-
-
