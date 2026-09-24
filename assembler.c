@@ -2,9 +2,12 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include "tables.h"
+#define A_BITS 15
+#define COMP_DELIM "="
+#define JUMP_DELIM ";"
 
 static bool a_instruction(char *buffer, char *instruction, symbol *symboltable);
-static bool c_instruction(char *buffer, char *instruction, symbol *symboltable);
+static bool c_instruction(char *buffer, char *instruction);
 
 bool assemble(char *buffer, char *instruction, symbol *symboltable) {
     bool is_a, return_val;
@@ -13,7 +16,7 @@ bool assemble(char *buffer, char *instruction, symbol *symboltable) {
     if (is_a)
         return_val = a_instruction(buffer, instruction, symboltable);
     else
-        return_val = c_instruction(buffer, instruction, symboltable);
+        return_val = c_instruction(buffer, instruction);
 
     return return_val;
 }
@@ -59,9 +62,9 @@ static bool a_instruction(char *buffer, char *instruction, symbol *symboltable) 
      * Must iterate backwards (15 to 1). For each iteration find amount to bit shift
      */
 
-    for (int i = 15; i >= 1; i--) {
+    for (int i = A_BITS; i >= 1; i--) {
 
-        int bit_shift = 15 - i;
+        int bit_shift = A_BITS - i;
         char bit;
 
         if ((1 << bit_shift) & value)
@@ -71,11 +74,50 @@ static bool a_instruction(char *buffer, char *instruction, symbol *symboltable) 
 
         buffer[i] = bit;
     }
+
+    return true;
 }
 
-static bool c_instruction(char *buffer, char *instruction, symbol *symboltable) {
+/*
+ * We will search for delimiters and set pointers to those addresses + 1, replace each delimiter with null terminator to effectively split into separate char strings
+ * each with pointer. Missing delimiters could be handled by setting to "" by default to match to NULL in field table. jump and dest are optional so mostly work around comp.
+ * Once pointers to each char string is obtained, look them up (look up return NULL on error) and print to buffer in order
+ */
+
+static bool c_instruction(char *buffer, char *instruction) {
     buffer[0] = '1';
     buffer[1] = '1';
     buffer[2] = '1';
 
+    char *comp = instruction;
+    char *dest = "";
+    char *jump = "";
+
+    char *tmp0 = strstr(instruction, COMP_DELIM);
+    char *tmp1 = strstr(instruction, JUMP_DELIM);
+
+    if (tmp0 != NULL) {
+        comp = tmp0 + 1;
+        *tmp0 = '\0';
+        dest = instruction;
+    }
+
+    if (tmp1 != NULL) {
+        jump = tmp1 + 1;
+        *tmp1 = '\0';
+    }
+
+    const char *comp_return = lookup_field(comp, fieldtable.comp);
+    const char *dest_return = lookup_field(dest, fieldtable.dest);
+    const char *jump_return = lookup_field(jump, fieldtable.jump);
+
+    if (!comp_return || !dest_return || !jump_return)
+        return false;
+
+}
+
+static const char *lookup_field(char *key, entry *table) {
+    for () {
+
+    }
 }

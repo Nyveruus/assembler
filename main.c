@@ -61,16 +61,12 @@ int main(int argc, char *argv[]) {
         if (!parser(linebuffer, &line))
             continue;
 
-        /*
-         * assemble, we should append to a new symbolic bits buffer as we lookup and translate parts of the instruction. We can
-         * use = ; or their absence as delimiters for each field and when bit buffer is complete, write to file.
-         * If there is a syntax error, just output line number with line_n and don't write, close file, rename to .partial or just delete the outfile
-         */
-
         char buffer[17];
         buffer[16] = '\0';
+
         if (!assemble(buffer, line, symboltable))  {
             fprintf(stderr, "Syntax error: line %zd\n", line_n);
+
             if (!(partial_name = append_partial(argv[2]))) {
                 fclose(outfile);
                 remove(argv[2]);
@@ -84,6 +80,7 @@ error_cleanup:
             fclose(infile);
             return 1;
         }
+
         fprintf(outfile, "%s\n", buffer);
     }
     fclose(outfile);
