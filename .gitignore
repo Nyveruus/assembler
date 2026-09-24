@@ -2,3 +2,4 @@ main
 *.partial
 hack_assembler
 *.txt
+*.hack
